@@ -19,7 +19,7 @@
 	- set the MPI C++ compiler (e.g., mpicxx=mpiCC)
 	- set the C++ compiler flags (e.g. cxxflags='-std=c++11 -O3 -Wall')
 	- set the executable directory (e.g., exedir='../bin/raijin/gnu')
-- run_make.sh
+- execute run_make.sh
 
 ## Building on Windows
 - You can build the programs with the free Microsoft Visual Studio 2013 Express.
