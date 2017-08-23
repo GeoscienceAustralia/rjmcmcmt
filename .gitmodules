@@ -1,0 +1,3 @@
+[submodule "submodules/cpp-utils"]
+	path = submodules/cpp-utils
+	url = git@github.com:rcb547/cpp-utils.git
