@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+    <MPICH2_ROOT>C:\Program Files\MPICH2</MPICH2_ROOT>
+    <MPICH2_INC>$(MPICH2_ROOT)\include</MPICH2_INC>
+    <MPICH2_LIB64>$(MPICH2_ROOT)\lib</MPICH2_LIB64>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LibraryPath>$(MPICH2_LIB64);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(MPICH2_INC);$(IncludePath)</IncludePath>
+    <_PropertySheetDisplayName>mpich2.x64</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>mpi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="MPICH2_ROOT">
+      <Value>$(MPICH2_ROOT)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="MPICH2_INC">
+      <Value>$(MPICH2_INC)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="MPICH2_LIB64">
+      <Value>$(MPICH2_LIB64)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

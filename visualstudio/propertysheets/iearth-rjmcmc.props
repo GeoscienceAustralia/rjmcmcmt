@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <RJMCMC_ROOT>Z:\code\repos\iearth\RJMCMC-1.0.11</RJMCMC_ROOT>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludePath>$(RJMCMC_ROOT)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(RJMCMC_ROOT)\lib\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <OutDir>..\..\bin\$(Platform)\$(Configuration)\</OutDir>
+    <SourcePath>$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>librjmcmc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="RJMCMC_ROOT">
+      <Value>$(RJMCMC_ROOT)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
