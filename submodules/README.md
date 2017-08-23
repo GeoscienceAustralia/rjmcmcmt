@@ -1,4 +1,4 @@
-Submodules
+submodules
 ===========
 
 Git submodules are used in this project. They contain utility and third party source code and binaries. Depending on what you are doing, you may not need all the submodules. When the repository is initially cloned the submodule directories will not be populated with code/files. To populate them you need to issue the "git submodule init" and "git submodule update" commands to initialise and populate the submodules with the (correct commit/version) of each repository. For example,

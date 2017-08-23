@@ -1,5 +1,5 @@
-rjmcmcmt/makefiles
-==================
+makefiles
+=========
 
 ##Directory for makefiles
 	*To compile on linux: Read, modify and run "run_make.sh"
