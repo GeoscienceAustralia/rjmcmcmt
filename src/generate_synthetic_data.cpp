@@ -33,8 +33,8 @@ int generate_synthetic_data(int argc, const char** argv)
 	std::string modelfile = std::string(argv[1]);
 	std::string edifile = std::string(argv[2]);
 	size_t nfrequencies = (size_t) atoi(argv[3]);
-	double flow = atof(argv[4]);;
-	double fhigh = atof(argv[5]);;	
+	double flow = atof(argv[4]);
+	double fhigh = atof(argv[5]);
 	double appres_relative_err = atof(argv[6]);;
 	double appres_floor_err = atof(argv[7]);;
 	double appphase_relative_err = atof(argv[8]);;
@@ -52,31 +52,31 @@ int generate_synthetic_data(int argc, const char** argv)
 	fprintf(fp, ">FREQ //%d\n", nf);
 	for (int i = 0; i < nf; i++){
 		fprintf(fp, " %13.6le ", frequency[i]);
-		if (i == nf || (i+1)%6 == 0)fprintf(fp, "\n");
+		if (i == nf-1 || (i+1)%6 == 0)fprintf(fp, "\n");
 	}
 
 	fprintf(fp, ">RHOXY //%d\n", nf);
 	for (int i = 0; i < nf; i++){
 		fprintf(fp, " %13.6le ", app_res[i]);
-		if (i == nf || (i + 1) % 6 == 0)fprintf(fp, "\n");
+		if (i == nf-1 || (i + 1) % 6 == 0)fprintf(fp, "\n");
 	}
 
 	fprintf(fp, ">RHOYX //%d\n", nf);
 	for (int i = 0; i < nf; i++){
 		fprintf(fp, " %13.6le ", app_res[i]);
-		if (i == nf || (i + 1) % 6 == 0)fprintf(fp, "\n");
+		if (i == nf-1 || (i + 1) % 6 == 0)fprintf(fp, "\n");
 	}
 
 	fprintf(fp, ">PHSXY //%d\n", nf);
 	for (int i = 0; i < nf; i++){
 		fprintf(fp, " %13.6le ", app_phase[i]);
-		if (i == nf || (i + 1) % 6 == 0)fprintf(fp, "\n");
+		if (i == nf-1 || (i + 1) % 6 == 0)fprintf(fp, "\n");
 	}
 
 	fprintf(fp, ">PHSYX //%d\n", nf);
 	for (int i = 0; i < nf; i++){
 		fprintf(fp, " %13.6le ", app_phase[i]-180.0);
-		if (i == nf || (i + 1) % 6 == 0)fprintf(fp, "\n");
+		if (i == nf-1 || (i + 1) % 6 == 0)fprintf(fp, "\n");
 	}
 	fprintf(fp,"\n");
 	fclose(fp);
