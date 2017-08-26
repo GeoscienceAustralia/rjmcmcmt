@@ -19,7 +19,7 @@ export cxxflags='-std=c++11 -O3 -Wall -diag-disable remark'
 
 export exedir='../bin/raijin'
 mpiCC -showme
-make -f rjmcmmt.make $1
+make -f rjmcmcmt.make $1
 make -f generate_synthetic_data.make $1
 
 
