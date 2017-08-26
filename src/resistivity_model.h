@@ -98,17 +98,18 @@ public:
 	}
 
 	static void add_gaussian_noise(std::vector<double>& data, const double& relative_err, const double& floor_err){
-
-		//std::default_random_engine generator;		
-		std::mt19937 generator;
-
-		std::normal_distribution<double> distribution(0.0, 1.0);		
+		
+		//auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+		std::mt19937::result_type seed = (unsigned int) std::time(NULL);
+		std::mt19937 generator(seed);
+		//std::time();
+		std::normal_distribution<double> distribution(0.0, 1.0);
 		double n;
 		for (size_t k = 0; k < data.size(); k++){
 			n = distribution(generator);
-			data[k] += n*relative_err*std::fabs(data[k]);			
+			data[k] += n*relative_err*std::fabs(data[k]);
 			n = distribution(generator);
-			data[k] += n*floor_err;			
+			data[k] += n*floor_err;	
 		}
 	}
 
@@ -153,21 +154,22 @@ public:
 			resistivity.push_back(res);
 			thickness.push_back(thk);
 		}
+		thickness.pop_back();
 		fclose(fp);
 	}
 
-	std::string string(){
+	std::string string(const std::string& lineprefix = std::string()){
 
 		std::string s;
 		double tsum = 0.0;
-		s = strprint("Layer    From       To   Resistivity\n");
+		s = strprint("%sLayer    From       To   Resistivity\n", lineprefix.c_str());
 		//           |..xx...xxxx.x...xxxx.x...xxxxxxx.x
-		for (size_t i = 0; i < thickness.size() - 1; i++){
-			s += strprint("  %2lu   %6.1lf   %6.1lf   %9.1lf\n", i + 1, tsum, tsum + thickness[i], resistivity[i]);
+		for (size_t i = 0; i < resistivity.size() - 1; i++){
+			s += strprint("%s  %2lu   %6.1lf   %6.1lf   %9.1lf\n", lineprefix.c_str(), i + 1, tsum, tsum + thickness[i], resistivity[i]);
 			tsum += thickness[i];
 		}
-		size_t i = thickness.size() - 1;
-		s += strprint("  %2lu   %6.1lf      Inf   %9.1lf\n", i + 1, tsum, resistivity[i]);
+		size_t i = resistivity.size() - 1;
+		s += strprint("%s  %2lu   %6.1lf      Inf   %9.1lf\n", lineprefix.c_str(), i + 1, tsum, resistivity[i]);
 		return s;
 	}
 

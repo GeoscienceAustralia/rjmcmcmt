@@ -15,6 +15,7 @@ Author: Ross C. Brodie, Geoscience Australia.
 #include <complex>
 #include <cmath>
 
+#include "vector_utils.h"
 #include "file_utils.h"
 
 //Scales from modelling units E/H(mV/km/nT) to EDI file units E/B(V/m/A/H)
@@ -48,7 +49,7 @@ public:
 
 	cEDIFile(){};
 
-	cEDIFile(const std::string path){
+	cEDIFile(const std::string& path){
 		pathname = path;
 		fixseparator(pathname);
 
@@ -72,7 +73,50 @@ public:
 		phsxy = read_token("PHSXY");
 		phsyx = read_token("PHSYX");
 		phsyy = read_token("PHSYY");		
-	}
+	};
+
+	cEDIFile(const std::vector<double>& frequency,
+		const std::vector<double>& apparent_resistivity,
+		const std::vector<double>& apparent_phase)
+	{		
+		freq = frequency;
+		rhoxy = apparent_resistivity;
+		rhoyx = apparent_resistivity;
+		phsxy = apparent_phase;
+		phsyx = apparent_phase - 180.0;		
+	};
+
+	void write(const std::string& path, const std::string& header){
+		
+		pathname = path;
+		fixseparator(pathname);		
+		FILE* fp = fileopen(pathname.c_str(), "w");
+		fprintf(fp, header.c_str());
+		write_token(fp, "FREQ", freq);
+		write_token(fp, "RHOXX", rhoxx);
+		write_token(fp, "RHOXY", rhoxy);
+		write_token(fp, "RHOYX", rhoyx);
+		write_token(fp, "RHOYY", rhoyy);
+		write_token(fp, "PHSXX", phsxx);
+		write_token(fp, "PHSXY", phsxy);
+		write_token(fp, "PHSYX", phsyx);
+		write_token(fp, "PHSYY", phsyy);
+		fprintf(fp, "\n");
+		fclose(fp);
+	};
+
+	void write_token(FILE* fp, const std::string& token, std::vector<double>& values) const {
+		
+		if (values.size() == 0)return;
+		fprintf(fp, ">%s //%d\n", token.c_str(),values.size());
+		for (size_t i = 0; i < values.size(); i++){
+			fprintf(fp, " %13.6le ", values[i]);
+			if (i == values.size() - 1 || (i + 1) % 6 == 0){
+				fprintf(fp, "\n");
+			}
+		}
+
+	};
 
 	std::vector<double> read_token(std::string token){
 		token = ">" + token;
@@ -146,6 +190,7 @@ public:
 		sFilePathParts fpp = getfilepathparts(pathname);
 		return fpp.prefix;
 	};
+
 };
 
 class cMTModeller1D{

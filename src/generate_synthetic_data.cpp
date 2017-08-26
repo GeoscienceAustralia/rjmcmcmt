@@ -41,45 +41,14 @@ int generate_synthetic_data(int argc, const char** argv)
 	double appphase_floor_err = atof(argv[9]);;
 
 	ResistivityModel m(modelfile);
+	m.print();
 	std::vector<double> frequency = log10space(flow, fhigh, nfrequencies);
 	std::vector<double> app_res;
 	std::vector<double> app_phase;	
-	m.generate_synthetic_data_app_res_phase(frequency, app_res, app_phase, appres_relative_err, appres_floor_err, appphase_relative_err, appphase_floor_err);
-	
-	int nf = (int)frequency.size();
-	FILE* fp = fileopen(edifile.c_str(), "w");
-	
-	fprintf(fp, ">FREQ //%d\n", nf);
-	for (int i = 0; i < nf; i++){
-		fprintf(fp, " %13.6le ", frequency[i]);
-		if (i == nf-1 || (i+1)%6 == 0)fprintf(fp, "\n");
-	}
-
-	fprintf(fp, ">RHOXY //%d\n", nf);
-	for (int i = 0; i < nf; i++){
-		fprintf(fp, " %13.6le ", app_res[i]);
-		if (i == nf-1 || (i + 1) % 6 == 0)fprintf(fp, "\n");
-	}
-
-	fprintf(fp, ">RHOYX //%d\n", nf);
-	for (int i = 0; i < nf; i++){
-		fprintf(fp, " %13.6le ", app_res[i]);
-		if (i == nf-1 || (i + 1) % 6 == 0)fprintf(fp, "\n");
-	}
-
-	fprintf(fp, ">PHSXY //%d\n", nf);
-	for (int i = 0; i < nf; i++){
-		fprintf(fp, " %13.6le ", app_phase[i]);
-		if (i == nf-1 || (i + 1) % 6 == 0)fprintf(fp, "\n");
-	}
-
-	fprintf(fp, ">PHSYX //%d\n", nf);
-	for (int i = 0; i < nf; i++){
-		fprintf(fp, " %13.6le ", app_phase[i]-180.0);
-		if (i == nf-1 || (i + 1) % 6 == 0)fprintf(fp, "\n");
-	}
-	fprintf(fp,"\n");
-	fclose(fp);
+	m.generate_synthetic_data_app_res_phase(frequency, app_res, app_phase, appres_relative_err, appres_floor_err, appphase_relative_err, appphase_floor_err);	
+	cEDIFile E(frequency, app_res, app_phase);
+	std::string s = "// Synthetic model\n" + m.string("// ");
+	E.write(edifile,s);
 	return 0;
 };
 
@@ -100,6 +69,12 @@ int main(int argc, const char** argv)
 		generate_synthetic_data(argc, argv);
 		return 0;
 	}		
+	catch (std::string& e)
+	{
+		_GSTPRINT_
+		std::cout << e << std::endl;
+		return 1;
+	}
 	catch (std::exception& e)
 	{
 		_GSTPRINT_

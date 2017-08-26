@@ -478,6 +478,7 @@ int main(int argc, char** argv)
 	{		
 		_GSTITEM_		
 		cMpiEnv mpienv(argc,argv);
+		std::printf("size=%d\n", mpienv.world_size());
 		int seed = (int) time(NULL) + mpienv.world_rank();
 		rjmcmc_seed(seed);
 
@@ -492,7 +493,13 @@ int main(int argc, char** argv)
 			cRjMcMCMT I(argv[1],f[i]);
 		}		
 		return 0;
-	}		
+	}
+	catch (std::string& e)
+	{
+		_GSTPRINT_
+		std::cout << e << std::endl;
+		return 1;
+	}
 	catch (std::exception& e)
 	{
 		_GSTPRINT_
