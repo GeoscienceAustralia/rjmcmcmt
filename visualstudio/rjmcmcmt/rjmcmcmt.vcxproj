@@ -90,7 +90,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\rjmcmcmt.cpp" />
-    <ClCompile Include="..\..\submodules\cpp-utils\src\blocklanguage.cpp" />
     <ClCompile Include="..\..\submodules\cpp-utils\src\file_utils.cpp" />
     <ClCompile Include="..\..\submodules\cpp-utils\src\general_utils.cpp" />
   </ItemGroup>

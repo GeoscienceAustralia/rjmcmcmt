@@ -173,8 +173,8 @@ public:
 		double freq_min = b.getdoublevalue("Frequency.Minimum");
 		double freq_max = b.getdoublevalue("Frequency.Maximum");
 
-		if (freq_min == cBlock::ud_double())freq_min = 0.0;
-		if (freq_max == cBlock::ud_double())freq_max = 1e16;
+		if (isundefined(freq_min))freq_min = 0.0;
+		if (isundefined(freq_max))freq_max = 1e16;
 				
 		double zr_nr = b.getdoublevalue("ImpedanceReal.ErrorRelative");
 		double zr_nf = b.getdoublevalue("ImpedanceReal.ErrorFloor");		
