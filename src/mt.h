@@ -108,7 +108,7 @@ public:
 	void write_token(FILE* fp, const std::string& token, std::vector<double>& values) const {
 		
 		if (values.size() == 0)return;
-		fprintf(fp, ">%s //%llu\n", token.c_str(),values.size());
+		fprintf(fp, ">%s //%lu\n", token.c_str(),values.size());
 		for (size_t i = 0; i < values.size(); i++){
 			fprintf(fp, " %13.6le ", values[i]);
 			if (i == values.size() - 1 || (i + 1) % 6 == 0){

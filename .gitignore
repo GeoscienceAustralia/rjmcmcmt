@@ -5,6 +5,7 @@ examples/*/output*
 
 $ Executables on raijin
 bin/raijin
+bin/*.exe
 
 # Compiled Object files
 *.slo
