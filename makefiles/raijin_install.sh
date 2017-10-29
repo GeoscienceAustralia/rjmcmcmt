@@ -11,6 +11,7 @@ cp -pru examples $installpath/examples
 cp -pru matlab $installpath/matlab
 cp -pru bin/raijin $installpath/bin/raijin
 
-chmod -R go+rx $installpath/bin/raijin/*.exe
+chmod -R g+rx $installpath/bin/raijin/*.exe
+chmod -R o+rx $installpath/bin/raijin/*.exe
 
 

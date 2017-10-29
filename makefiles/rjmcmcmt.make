@@ -16,7 +16,6 @@ libs       = -L$(LIBRJMCMC_ROOT)/lib -lrjmcmc
 
 objects += $(cpputilssrc)/general_utils.o
 objects += $(cpputilssrc)/file_utils.o
-objects += $(cpputilssrc)/blocklanguage.o
 objects += $(srcdir)/rjmcmcmt.o
 
 %.o : %.cpp
