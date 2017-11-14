@@ -44,3 +44,11 @@
 	- The pre-compiled Windows inversion programs require Microsoft HPC Pack 2012 because thats the flavour of MPI they have been compiled and linked with.
 	- They can be recompiled using MPICH or other flouvours of MPI if required.
 
+## License
+This software is licensed under the GNU GPL v3 license. See the [license deed](LICENSE) for details.
+
+## Contacts
+**Ross Brodie**  
+*Lead Developer*  
+Geoscience Australia  
+<ross.brodie@ga.gov.au>  
