@@ -21,11 +21,14 @@
 	- set the executable directory (e.g., exedir='../bin/raijin/gnu')
 - execute run_make.sh
 
+## Windows executable
+- Pre-built Windows 64-bit executables are located in bin/x64/Release
+
 ## Building on Windows
-- You can build the programs with the free Microsoft Visual Studio 2013 Express.
+- You can build (compile) the programs with the free Microsoft Visual Studio Express 2013.
 - Visual Studio solution and project files are supplied.
-- Open vs2013\rjmcmcmt\rjmcmcmt.sln to compile the inversion program.
-- Open vs2013\generate_synthetic_data\generate_synthetic_data.sln to compile the synthetic data generation program.
+- Open visualstudio\rjmcmcmt\rjmcmcmt.sln to compile the inversion program.
+- Open visualstudio\generate_synthetic_data\generate_synthetic_data.sln to compile the synthetic data generation program.
 
 ## Other software dependencies
 1. cpp-utils

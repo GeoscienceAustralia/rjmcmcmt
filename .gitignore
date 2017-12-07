@@ -36,8 +36,9 @@ examples/*/*.out
 # Build results
 [Dd]ebug/
 [Rr]elease/
-[Rr]elease-nompi/
 [Oo]bj/
+
+!bin/x64/[Rr]elease/
 
 
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
