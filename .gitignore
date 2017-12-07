@@ -2,15 +2,13 @@
 
 $ Test files and scripts specific to raijin cluster
 *raijin*
-raijin_*
 bin/raijin/intel/*
 bin/raijin/gnu/*
+makefiles/run_make_vm.sh
 
 $ Output directory of examples
 examples/*/output*
 examples/*/*.out
-
-
 
 # Compiled Object files
 *.slo
