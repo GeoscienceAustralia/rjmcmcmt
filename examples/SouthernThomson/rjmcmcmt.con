@@ -1,19 +1,18 @@
  Control Begin
 
-	Options Begin
+	SyntheticTest = no
 
+	Options Begin
 		PrintBestFits = no
-		
 		//UseDataType [Impedance | ApparentResistivityPhase]
 		UseDataType   = Impedance
-
 		OutputDirectory    = output\
 
-		BurninSamples      = 10000
-		TotalSamples       = 100000
+		BurninSamples      = 50000
+		TotalSamples       = 2000000
 		
 		MaxLayers          = 20
-		MaxInterfaceDepth  = 3000
+		MaxInterfaceDepth  = 4000
 		NumDepthBins       = 200
 
 		MinResistivity     = 0.1
@@ -24,13 +23,21 @@
 	Options End
 
 	Data Begin
-
 		EdiFileDir = edifiles\
-
 		Frequency Begin
-			Minimum = 1e-6
-			Maximum = 1e+6
+			Minimum = 1
+			Maximum = 1e+4
 		Frequency End
+
+		ImpedanceReal Begin
+			ErrorRelative = 0.05
+			ErrorFloor    = 0.025
+		ImpedanceReal End
+
+		ImpedanceImaginary Begin
+			ErrorRelative = 0.05
+			ErrorFloor    = 0.025
+		ImpedanceImaginary End
 
 		ApparentResistivity Begin
 			ErrorRelative = 0.05
@@ -41,16 +48,6 @@
 			ErrorRelative = 0.02
 			ErrorFloor    = 1
 		ApparentPhase End
-
-		ImpedanceReal Begin
-			ErrorRelative = 0.05
-			ErrorFloor    = 0.1
-		ImpedanceReal End
-
-		ImpedanceImaginary Begin
-			ErrorRelative = 0.05
-			ErrorFloor    = 0.1
-		ImpedanceImaginary End
 
 	Data End
 
