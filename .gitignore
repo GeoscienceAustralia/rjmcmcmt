@@ -97,6 +97,10 @@ ipch/
 *.vsp
 *.vspx
 
+# Folder config file
+__pycache__/
+
+
 # =========================
 # Windows detritus
 # =========================

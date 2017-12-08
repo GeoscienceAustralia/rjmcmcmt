@@ -330,7 +330,7 @@ for si=1:1:length(sdir)
     set(gcf,'visible','on');
     pause(0.1);
     print('-painters','-dpdf','-r300',pdffile);
-    print('-painters','-djpeg','-r300',jpgfile);
-    print('-painters','-depsc','-r300',epsfile);
+    %print('-painters','-djpeg','-r300',jpgfile);
+    %print('-painters','-depsc','-r300',epsfile);
     
 end
