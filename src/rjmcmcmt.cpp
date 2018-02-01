@@ -21,11 +21,13 @@ Author: Ross C. Brodie, Geoscience Australia.
 	cStackTrace globalstacktrace;
 #endif
 
+#include "undefinedvalues.h"
 #include "general_utils.h"
 #include "file_utils.h"
 #include "vector_utils.h"
 #include "blocklanguage.h"
 #include "mpi_wrapper.h"
+
 
 #include "mt.h"
 #include "resistivity_model.h"
@@ -173,8 +175,8 @@ public:
 		double freq_min = b.getdoublevalue("Frequency.Minimum");
 		double freq_max = b.getdoublevalue("Frequency.Maximum");
 
-		if (isundefined(freq_min))freq_min = 0.0;
-		if (isundefined(freq_max))freq_max = 1e16;
+		if (isdefined(freq_min)==false)freq_min = 0.0;
+		if (isdefined(freq_max)==false)freq_max = 1e16;
 				
 		double zr_nr = b.getdoublevalue("ImpedanceReal.ErrorRelative");
 		double zr_nf = b.getdoublevalue("ImpedanceReal.ErrorFloor");		
