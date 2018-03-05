@@ -3,17 +3,16 @@ clear all;
 close all;
 
 plotlowestmisfitmodels=false;
-plotmisfits=true;
-plotsynthetic=false;
-depthplotlim = [0 500];
-resplotlim   = [0.1 100000];
+plotmisfits   = true;
+plotsynthetic = true;
+depthplotlim  = [0 1500];
+resplotlim    = [0.1 100000];
 
-syntheticdir = '..\synthetic\edifiles\';
-resultsdir   = '..\examples\eucla\output\';
+syntheticdir = '..\test1\edifiles\';
+resultsdir   = '..\test1\output\';
 sdir = dir([resultsdir '*']);
 
 for si=1:1:length(sdir)
-%for si=1:1:3
     clear D;
     clear BFFM;
     
@@ -93,10 +92,10 @@ for si=1:1:length(sdir)
     reslim  = [res_bins(1) res_bins(end)];
     
     
-    a=load([stationdir 'partitions_depth_hist.txt']);
+    a=load([stationdir 'interface_depth_hist.txt']);
     partition_depth = a(:,1);
     partition_depth_hist = a(:,2);
-    a=load([stationdir 'partitions_hist.txt']);
+    a=load([stationdir 'npartitions_hist.txt']);
     layer_num_hist = a(:,1);
     layer_num      = [1:length(a)];
     
@@ -151,8 +150,10 @@ for si=1:1:length(sdir)
         for chain=0:1:nchains-1;
             mffile = sprintf('%smisfit.%03d.txt',stationdir,chain);
             a = load(mffile);
-            MF.sample(:,chain+1) = a(:,1);
-            MF.misfit(:,chain+1) = a(:,2);
+            %MF.sample(:,chain+1) = a(:,1);
+            %MF.misfit(:,chain+1) = a(:,2);                        
+            MF.misfit(:,chain+1) = a;
+            MF.sample(:,chain+1) = 1:length(a);
         end
         
         xl=[1 100+max(MF.sample(:,1))];
@@ -210,7 +211,7 @@ for si=1:1:length(sdir)
     end
     
     %Depth grid lines
-    for yg=0:50:500
+    for yg=0:50:max(depthplotlim)
         plot(resplotlim,[yg yg],':','linewidth',1,'color',[0.5 0.5 0.5]);
     end
     

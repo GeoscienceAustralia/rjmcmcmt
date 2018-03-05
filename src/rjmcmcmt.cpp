@@ -70,6 +70,12 @@ private:
 	int nglobal_parameters = 0;
 	int nlocal_parameters  = 0;
 
+	const int rootprocess = 0;
+	bool isrootprocess(){
+		if (cMpiEnv::world_rank() == rootprocess) return true;
+		return false;
+	}
+
 public:	
 
 	cRjMcMCMT(const std::string& controlfile, const std::string& edifile){
@@ -315,8 +321,7 @@ public:
 		properties[k].fstd_value = 0.05*(properties[k].fmax - properties[k].fmin);
 		properties[k].fstd_bd = 2.0 * properties[k].fstd_value;
 
-		void* user_data = (void*)this;
-		int mpiroot = 0;//My guiess is that this the process where the results are merged
+		void* user_data = (void*)this;		
 		resultset1dfm_t* results = MPI_part1d_forwardmodel(burninsamples,
 			totalsamples, min_part, max_part, xmin, xmax,
 			nxsamples, nysamples, credible_interval, pd,
@@ -325,7 +330,7 @@ public:
 			nlocal_parameters, properties,
 			forward_model_function, user_data,
 			RESULTSET1DFM_MEAN | RESULTSET1DFM_MEDIAN | RESULTSET1DFM_MODE | RESULTSET1DFM_CREDIBLE,
-			cMpiEnv::world_size(), cMpiEnv::world_rank(), mpiroot, cMpiEnv::world_comm());
+			cMpiEnv::world_size(), cMpiEnv::world_rank(), rootprocess, cMpiEnv::world_comm());
 
 
 		if (results == NULL){
@@ -333,9 +338,12 @@ public:
 			return -1;
 		}
 
-		save_convergences(results);
-		if (cMpiEnv::world_rank() == mpiroot) save_results(results);
-		
+		save_misfits(results);
+		save_npartitions(results);
+		if (isrootprocess()){
+			save_results(results);
+		}
+		resultset1dfm_destroy(results);		
 		return 0;
 	}
 
@@ -358,17 +366,45 @@ public:
 		return true;
 	}
 
-	bool save_convergences(resultset1dfm_t* results){
+	bool save_misfits(resultset1dfm_t* results){
 		const double* v = resultset1dfm_get_misfit(results);		
+		
+		// 0.5*misfit (or -ve log-likelihood is actually stored in the misfit so multiply by 2)
+		std::vector<double> mf(v, v + totalsamples);
+		mf *= 2.0;
 		std::string filename = StationDirectory() + "misfit" + strprint(".%03d", cMpiEnv::world_rank()) + ".txt";
-		//rjmcmc_save_vector(filename.c_str(), v, totalsamples);
+		rjmcmc_save_vector(filename.c_str(), mf.data(), totalsamples);
+		return true;
+	}
 
-		//Only save every 100th sample to limit file size, but save sample number as well
-		FILE* fp=fileopen(filename,"w");
-		for(int i=0; i<totalsamples; i=i+100){
-			fprintf(fp,"%d %lf\n",i+1,v[i]);
+	static void compute_histogram(const int* iv, const int n, const int minv, const int maxv, int* hist){
+		int nbins = maxv - minv + 1;
+		for (int bi = 0; bi < nbins; bi++) hist[bi] = 0;
+		for (int si = 0; si < n; si++) {
+			const int bin = iv[si] - minv;
+			hist[bin] ++;
+		}		
+	}
+
+	bool save_npartitions(resultset1dfm_t* results){								
+		//Number of partitions
+		const int* iv = resultset1dfm_get_partitions(results);
+		std::string filename = StationDirectory() + "npartitions" + strprint(".%03d", cMpiEnv::world_rank()) + ".txt";
+		rjmcmc_save_int_vector(filename.c_str(), iv, totalsamples);
+
+		//Compute histogram only over the sample after the burnin
+		int nbins = max_part - min_part + 1;
+		std::vector<int> local_hist(nbins);
+		std::vector<int> global_hist(nbins);
+		int n = totalsamples - burninsamples;
+		compute_histogram(iv + burninsamples, n, min_part, max_part, local_hist.data());
+		MPI_Reduce(local_hist.data(), global_hist.data(), nbins, MPI_INT, MPI_SUM, rootprocess, cMpiEnv::world_comm());
+				
+		//Number of partitions histogram
+		if (isrootprocess()){
+			filename = StationDirectory() + "npartitions_hist.txt";
+			rjmcmc_save_int_vector(filename.c_str(), global_hist.data(), nbins);
 		}
-		fclose(fp);
 		return true;
 	}
 	
@@ -379,24 +415,20 @@ public:
 		double* ycoords = rjmcmc_create_array_1d(nysamples);		
 		double* xcoords = rjmcmc_create_array_1d(nxsamples);
 
+		//Depth bins
 		resultset1dfm_fill_xcoord_vector(results, xcoords, &nxsamples);
 		filename = StationDirectory() + "depth_bins.txt";
 		rjmcmc_save_vector(filename.c_str(), xcoords, nxsamples);
 		
-		const int* iv = resultset1dfm_get_partitions(results);
-		filename = StationDirectory() + "partitions.txt";
-		rjmcmc_save_int_vector(filename.c_str(), iv, totalsamples);
-		filename = StationDirectory() + "partitions_hist.txt";
-		rjmcmc_save_int_vector_as_histogram(filename.c_str(), 2, max_part, iv, totalsamples);
-		
-		iv = resultset1dfm_get_partition_x_histogram(results);		
-		filename = StationDirectory() + "partitions_depth_hist.txt";
+		//1D changepoint histograms
+		const int* iv = resultset1dfm_get_partition_x_histogram(results);		
+		filename = StationDirectory() + "interface_depth_hist.txt";
 		rjmcmc_save_int_coords(filename.c_str(), xcoords, iv, nxsamples);
 		
+		//2D property histograms
 		save_property_histograms(results);
 		
 		//Property bins
-
 		for (int k = 0; k < nlocal_parameters; k++){
 			int pi = k + 1;
 			resultset1dfm_fill_ycoord_vector(results, k, ycoords, &nysamples);
@@ -444,8 +476,7 @@ public:
 			rjmcmc_save_coords(filename.c_str(), xcoords, v, nxsamples);
 		}
 		rjmcmc_destroy_array_1d(xcoords);
-		rjmcmc_destroy_array_1d(ycoords);
-		resultset1dfm_destroy(results);
+		rjmcmc_destroy_array_1d(ycoords);		
 		return 0;
 	}
 

@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rjmcmcmt", "rjmcmcmt.vcxproj", "{7B2ABFFB-3AD0-4546-A41B-67F78766418F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A829C131-8B79-4E64-81B2-4CF442101A71} = {A829C131-8B79-4E64-81B2-4CF442101A71}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "librjmcmc", "..\..\..\iearth\RJMCMC-1.0.11\visualstudio\librjmcmc\librjmcmc.vcxproj", "{A829C131-8B79-4E64-81B2-4CF442101A71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{7B2ABFFB-3AD0-4546-A41B-67F78766418F}.Debug|x64.Build.0 = Debug|x64
 		{7B2ABFFB-3AD0-4546-A41B-67F78766418F}.Release|x64.ActiveCfg = Release|x64
 		{7B2ABFFB-3AD0-4546-A41B-67F78766418F}.Release|x64.Build.0 = Release|x64
+		{A829C131-8B79-4E64-81B2-4CF442101A71}.Debug|x64.ActiveCfg = Debug|x64
+		{A829C131-8B79-4E64-81B2-4CF442101A71}.Debug|x64.Build.0 = Debug|x64
+		{A829C131-8B79-4E64-81B2-4CF442101A71}.Release|x64.ActiveCfg = Release|x64
+		{A829C131-8B79-4E64-81B2-4CF442101A71}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
