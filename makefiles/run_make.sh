@@ -12,7 +12,8 @@ export cxxflags='-std=c++11 -O3 -Wall -fdiagnostics-color=always'
 export exedir='../bin/raijin/gnu'
 
 #Intel compiler on raijin.nci.org.au
-#module load librjmcmc/intel
+#module load gcc/5.2.0 #Note: gcc/5.2.0 is only needed because the system gcc 4.7 does not have std::numeric_limits::lowest(), icpc uses gcc under the hood
+#module load rjmcmcmt/intel
 #export cxx=icpc
 #export mpicxx=mpiCC
 #export cxxflags='-std=c++11 -O3 -Wall -diag-disable remark'
