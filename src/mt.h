@@ -79,7 +79,7 @@ public:
 		const std::vector<double>& apparent_resistivity,
 		const std::vector<double>& apparent_phase)
 	{		
-		freq = frequency;
+		freq  = frequency;
 		rhoxy = apparent_resistivity;
 		rhoyx = apparent_resistivity;
 		phsxy = apparent_phase;
@@ -130,7 +130,11 @@ public:
 			std::vector<std::string> t = tokenize(s);
 			if (t.size()>0 && t[0] == token){
 				int num;
-				sscanf(t.back().c_str(), "//%d", &num);
+				int nread;
+				nread = sscanf(t.back().c_str(), "%d", &num);
+				if (nread == 0){
+					nread = sscanf(t.back().c_str(), "//%d", &num);
+				}
 				while (filegetline(fp, s)) {
 					t = tokenize(s);
 					for (size_t i = 0; i < t.size(); i++){
@@ -150,13 +154,14 @@ public:
 	};
 	
 	void limit_frequency_range(const double freq_min, const double freq_max){
-
-		//Remove the null flagged data (e.g. 1e+32) and frequencies out of range
+		
 		for (size_t i = 0; i < freq.size(); i++){
-			if (rhoxy[i] >= 1e30 || rhoyx[i] >= 1e30 ||
-				phsxy[i] >= 1e30 || phsyx[i] >= 1e30 ||
-				freq[i] < freq_min ||
-				freq[i] > freq_max){
+			//Remove the null flagged data (e.g. 1e+32) and frequencies out of range
+			//if (rhoxy[i] >= 1e30 || rhoyx[i] >= 1e30 ||
+			//	phsxy[i] >= 1e30 || phsyx[i] >= 1e30 ||
+			//	freq[i] < freq_min ||
+			//	freq[i] > freq_max){
+			if (freq[i] < freq_min || freq[i] > freq_max){
 
 				freq.erase(freq.begin() + i);
 
@@ -170,15 +175,15 @@ public:
 				zyxi.erase(zyxi.begin() + i);
 				zyyi.erase(zyyi.begin() + i);
 
-				rhoxx.erase(rhoxx.begin() + i);
-				rhoxy.erase(rhoxy.begin() + i);
-				rhoyx.erase(rhoyx.begin() + i);
-				rhoyy.erase(rhoyy.begin() + i);
+				if (rhoxx.size()>0) rhoxx.erase(rhoxx.begin() + i);
+				if (rhoxy.size()>0) rhoxy.erase(rhoxy.begin() + i);
+				if (rhoyx.size()>0) rhoyx.erase(rhoyx.begin() + i);
+				if (rhoyy.size()>0) rhoyy.erase(rhoyy.begin() + i);
 				
-				phsxx.erase(phsxx.begin() + i);
-				phsxy.erase(phsxy.begin() + i);
-				phsyx.erase(phsyx.begin() + i);
-				phsyy.erase(phsyy.begin() + i);
+				if (phsxx.size()>0) phsxx.erase(phsxx.begin() + i);
+				if (phsxy.size()>0) phsxy.erase(phsxy.begin() + i);
+				if (phsyx.size()>0) phsyx.erase(phsyx.begin() + i);
+				if (phsyy.size()>0) phsyy.erase(phsyy.begin() + i);
 
 				i--;
 			}
