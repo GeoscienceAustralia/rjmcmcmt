@@ -13,17 +13,13 @@ Author: Ross C. Brodie, Geoscience Australia.
 #include <cmath>
 #include <fstream>
 
-#define USEGLOBALSTACKTRACE
-#ifdef USEGLOBALSTACKTRACE
-	#include "stacktrace.h"
-	cStackTrace globalstacktrace;
-#endif
-
 #include <vector>
 #include "general_utils.h"
+#include "logger.h"
 #include "mt.h"
 #include "resistivity_model.h"
 
+class cLogger glog; //The global instance of the log file manager
 
 int generate_synthetic_data(int argc, const char** argv)
 {

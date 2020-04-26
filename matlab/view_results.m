@@ -4,13 +4,16 @@ close all;
 
 plotlowestmisfitmodels=false;
 plotmisfits   = true;
-plotsynthetic = false;
+plotsynthetic = true;
 depthplotlim  = [0 1500];
 resplotlim    = [0.1 100000];
 
 
-syntheticdir = '..\examples\SouthernThomson\edifiles\';
-resultsdir   = '..\examples\SouthernThomson\output\';
+%syntheticdir = '..\examples\SouthernThomson\edifiles\';
+%resultsdir   = '..\examples\SouthernThomson\output\';
+
+syntheticdir = '..\examples\Synthetic\edifiles\';
+resultsdir   = '..\examples\Synthetic\output\';
 
 sdir = dir([resultsdir '*']);
 
