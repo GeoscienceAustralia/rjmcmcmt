@@ -4,12 +4,12 @@ close all;
 
 plotlowestmisfitmodels=false;
 plotmisfits   = true;
-plotsynthetic = true;
+plotsynthetic = false;
 depthplotlim  = [0 1500];
 resplotlim    = [0.1 100000];
 
-syntheticdir = '..\test1\edifiles\';
-resultsdir   = '..\test1\output\';
+syntheticdir = '..\SouthernThomson\edifiles\';
+resultsdir   = '..\SouthernThomson\output\';
 sdir = dir([resultsdir '*']);
 
 for si=1:1:length(sdir)
@@ -130,8 +130,8 @@ for si=1:1:length(sdir)
     
     %%
     close(gcf);
-    bkgcolor = [1 1 1]; fgcolor  = [0 0 0]; cmap = gray(256); cmap=flip(cmap,1);
-    %bkgcolor = [0 0 0]; fgcolor  = [1 1 1]; cmap = gray(256);
+    %bkgcolor = [1 1 1]; fgcolor  = [0 0 0]; cmap = gray(256); cmap=flip(cmap,1);
+    bkgcolor = [0 0 0]; fgcolor  = [1 1 1]; cmap = gray(256);
     figure;
     paperwidth  = 25;
     paperheight = 15;
@@ -241,8 +241,8 @@ for si=1:1:length(sdir)
     %grid on;
     set(gca,'ydir','reverse');
     set(gca,'layer','top');
-    %set(gca,'xgrid','off');
-    set(gca,'xaxis','top');
+    %set(gca,'xgrid','off');    
+    set(gca,'xaxislocation','top');    
     set(gca,'xscale','log');
     set(gca,'yscale','linear');
     set(gca,'color',bkgcolor);
@@ -264,8 +264,8 @@ for si=1:1:length(sdir)
     xlim( [-10 max(partition_depth_hist)]);
     ylim(depthplotlim);
     set(gca,'ydir','reverse');
-    set(gca,'xaxis','top');
-    %set(gca,'yaxis','right');
+    set(gca,'xaxislocation','top');
+    set(gca,'yaxislocation','right');
     set(gca,'xticklabel',[]);
     set(gca,'yticklabel',[]);
     set(gca,'color',bkgcolor);

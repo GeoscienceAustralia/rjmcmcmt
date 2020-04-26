@@ -4,20 +4,19 @@
 export srcdir='../src'
 export cpputilssrc='../submodules/cpp-utils/src'
 
-#GNU compiler on raijin.nci.org.au
+#GNU compiler on gadi.nci.org.au
 module load rjmcmcmt/gnu
 export cxx=g++
 export mpicxx=mpiCC
 export cxxflags='-std=c++11 -O3 -Wall -fdiagnostics-color=always'
-export exedir='../bin/raijin/gnu'
+export exedir='../bin/gadi/gnu'
 
-#Intel compiler on raijin.nci.org.au
-#module load gcc/5.2.0 #Note: gcc/5.2.0 is only needed because the system gcc 4.7 does not have std::numeric_limits::lowest(), icpc uses gcc under the hood
+#Intel compiler on gadi.nci.org.au
 #module load rjmcmcmt/intel
 #export cxx=icpc
 #export mpicxx=mpiCC
 #export cxxflags='-std=c++11 -O3 -Wall -diag-disable remark'
-#export exedir='../bin/raijin/intel'
+#export exedir='../bin/gadi/intel'
 
 mpiCC -showme
 make -f rjmcmcmt.make $1

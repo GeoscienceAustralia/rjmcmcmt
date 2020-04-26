@@ -1,9 +1,9 @@
 #File patterns that are ignored
 
 $ Test files and scripts specific to raijin cluster
-*raijin*
-bin/raijin/intel/*
-bin/raijin/gnu/*
+*gadi*
+bin/gadi/intel/*
+bin/gadi/gnu/*
 makefiles/run_make_vm.sh
 
 $ Output directory of examples
