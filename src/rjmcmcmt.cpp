@@ -14,24 +14,18 @@ Author: Ross C. Brodie, Geoscience Australia.
 #include <fstream>
 #include <stdexcept>
 
-
-#define USEGLOBALSTACKTRACE
-#ifdef USEGLOBALSTACKTRACE
-	#include "stacktrace.h"
-	cStackTrace globalstacktrace;
-#endif
-
 #include "undefinedvalues.h"
 #include "general_utils.h"
 #include "file_utils.h"
 #include "vector_utils.h"
 #include "blocklanguage.h"
 #include "mpi_wrapper.h"
-
-
+#include "logger.h"
 #include "mt.h"
 #include "resistivity_model.h"
 
+class cLogger glog; //The global instance of the log file manager
+class cStackTrace gtrace; //The global instance of the stacktrace
 
 extern "C"{
 #include <rjmcmc/forwardmodel_mpi.h>
@@ -45,7 +39,7 @@ class cRjMcMCMT{
 private:
 		
 
-	cEDIFile E;
+	cEDIFile EDI;
 	MTDataType  DataType;	
 	std::string OutputDirectory;
 	bool PrintBestFits;
@@ -80,7 +74,7 @@ public:
 
 	cRjMcMCMT(const std::string& controlfile, const std::string& edifile){
 		cBlock b(controlfile);
-		E = cEDIFile(edifile);
+		EDI = cEDIFile(edifile);
 		parse_options(b.findblock("Options"));
 		write_station_info();		
 		get_data_and_noise(b.findblock("Data"));		
@@ -89,7 +83,7 @@ public:
 
 	std::string StationDirectory()
 	{		
-		return OutputDirectory + E.StationName() + pathseparatorstring();
+		return OutputDirectory + EDI.StationName() + pathseparatorstring();
 	};
 
 	void parse_options(const cBlock& b){
@@ -199,18 +193,18 @@ public:
 		double phs_nr     = b.getdoublevalue("ApparentPhase.ErrorRelative");
 		double phs_nf     = b.getdoublevalue("ApparentPhase.ErrorFloor");
 
-		E.limit_frequency_range(freq_min, freq_max);		
-		size_t nf = E.freq.size();
+		EDI.limit_frequency_range(freq_min, freq_max);		
+		size_t nf = EDI.freq.size();
 		if (DataType == MT_DT_IMPEDANCE){			
 			std::vector<double> zr(nf);
 			std::vector<double> zi(nf);
 			std::vector<double> zr_err(nf);
 			std::vector<double> zi_err(nf);
 			for (size_t i = 0; i < nf; i++){				
-				std::complex<double> zxx(E.zxxr[i], E.zxxi[i]);
-				std::complex<double> zxy(E.zxyr[i], E.zxyi[i]);
-				std::complex<double> zyx(E.zyxr[i], E.zyxi[i]);
-				std::complex<double> zyy(E.zyyr[i], E.zyyi[i]);
+				std::complex<double> zxx(EDI.zxxr[i], EDI.zxxi[i]);
+				std::complex<double> zxy(EDI.zxyr[i], EDI.zxyi[i]);
+				std::complex<double> zyx(EDI.zyxr[i], EDI.zyxi[i]);
+				std::complex<double> zyy(EDI.zyyr[i], EDI.zyyi[i]);
 				std::complex<double> zdet = std::sqrt(zxx*zyy - zxy*zyx);
 				zr[i] = zdet.real();
 				zi[i] = zdet.imag();
@@ -222,15 +216,15 @@ public:
 			derr = concaternate(zr_err, zi_err);
 		}
 		else if (DataType == MT_DT_APPRESPHASE){
-			E.phsyx = 180.0 + E.phsyx;
+			EDI.phsyx = 180.0 + EDI.phsyx;
 			//std::vector<double> rho = pow10(0.5*(log10(E.rhoxy) + log10(E.rhoyx)));
 			std::vector<double> rho(nf);
 			std::vector<double> phs(nf);
 			std::vector<double> rho_err(nf);
 			std::vector<double> phs_err(nf);
 			for (size_t i = 0; i < rho.size(); i++){				
-				rho[i] = std::sqrt(E.rhoxy[i] * E.rhoyx[i]);//Geometric mean
-				phs[i] = 0.5*(E.phsxy[i] + E.phsyx[i]); //Arithemitic mean
+				rho[i] = std::sqrt(EDI.rhoxy[i] * EDI.rhoyx[i]);//Geometric mean
+				phs[i] = 0.5*(EDI.phsxy[i] + EDI.phsyx[i]); //Arithemitic mean
 				rho_err[i] = std::sqrt(std::pow(rho[i] * rho_nr, 2.0) + std::pow(rho_nf, 2.0));
 				phs_err[i] = std::sqrt(std::pow(phs[i] * phs_nr, 2.0) + std::pow(phs_nf, 2.0));
 			}
@@ -238,8 +232,8 @@ public:
 			derr = concaternate(rho_err, phs_err);
 		}
 
-		ResistivityModel::write_forward_model(StationDirectory()+"data.txt", E.freq, dobs);
-		ResistivityModel::write_forward_model(StationDirectory()+"noise.txt", E.freq, derr);
+		ResistivityModel::write_forward_model(StationDirectory()+"data.txt", EDI.freq, dobs);
+		ResistivityModel::write_forward_model(StationDirectory()+"noise.txt", EDI.freq, derr);
 	}
 	
 	static double forward_model_function(void* userarg,
@@ -272,10 +266,10 @@ public:
 		ResistivityModel m(depths, props);
 		std::vector<double> dpre;
 		if(me->DataType == MT_DT_IMPEDANCE){
-			dpre = m.model_impedance_fieldunits_as_vector(me->E.freq);
+			dpre = m.model_impedance_fieldunits_as_vector(me->EDI.freq);
 		}
 		else if (me->DataType == MT_DT_APPRESPHASE){
-			dpre = m.model_appresphase_as_vector(me->E.freq);
+			dpre = m.model_appresphase_as_vector(me->EDI.freq);
 		}				
 		std::vector<double> nr   = (dpre - me->dobs) / me->derr;
 
@@ -290,7 +284,7 @@ public:
 			m.write(bmf);
 
 			std::string bmff = me->StationDirectory() + "best_model_forward" + strprint(".%03d", cMpiEnv::world_rank()) + ".txt";						
-			m.write_forward_model(bmff, me->E.freq, dpre);
+			m.write_forward_model(bmff, me->EDI.freq, dpre);
 
 			if (me->PrintBestFits){
 				printf("It=%d misfit=%10.1lf\n", nit, misfit);
@@ -351,7 +345,7 @@ public:
 		if (cMpiEnv::world_rank() == 0){
 			std::string statfile = StationDirectory() + "station_info.txt";
 			std::ofstream o(statfile);
-			o << E.StationName() << std::endl;
+			o << EDI.StationName() << std::endl;
 			if (DataType == MT_DT_IMPEDANCE){
 				o << "Impedance" << std::endl;
 			}

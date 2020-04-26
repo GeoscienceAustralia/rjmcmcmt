@@ -8,8 +8,10 @@ plotsynthetic = false;
 depthplotlim  = [0 1500];
 resplotlim    = [0.1 100000];
 
-syntheticdir = '..\SouthernThomson\edifiles\';
-resultsdir   = '..\SouthernThomson\output\';
+
+syntheticdir = '..\examples\SouthernThomson\edifiles\';
+resultsdir   = '..\examples\SouthernThomson\output\';
+
 sdir = dir([resultsdir '*']);
 
 for si=1:1:length(sdir)
