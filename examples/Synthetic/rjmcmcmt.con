@@ -11,7 +11,7 @@
 		OutputDirectory    = output\
 
 		BurninSamples      = 10000
-		TotalSamples       = 1000000
+		TotalSamples       = 300000
 		
 		MaxLayers          = 20
 		MaxInterfaceDepth  = 4000

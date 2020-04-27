@@ -1,5 +1,5 @@
-Synthetic_Model_1
+Synthetic_Model_2
 60  100
-140 5
+340 5
 580 100
 Inf 5000

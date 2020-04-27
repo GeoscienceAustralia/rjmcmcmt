@@ -4,16 +4,21 @@ close all;
 
 plotlowestmisfitmodels=false;
 plotmisfits   = true;
-plotsynthetic = true;
 depthplotlim  = [0 1500];
 resplotlim    = [0.1 100000];
 
-
-%syntheticdir = '..\examples\SouthernThomson\edifiles\';
-%resultsdir   = '..\examples\SouthernThomson\output\';
-
-syntheticdir = '..\examples\Synthetic\edifiles\';
 resultsdir   = '..\examples\Synthetic\output\';
+syntheticdir = '..\examples\Synthetic\edifiles\';
+plotsynthetic = true;
+
+%resultsdir    = '..\examples\SouthernThomson\output\';
+%syntheticdir  = '..\examples\SouthernThomson\edifiles\';
+%plotsynthetic = false;
+
+%resultsdir    = '..\examples\CoompanaProvince\output\';
+%syntheticdir  = '..\examples\CoompanaProvince\edifiles\';
+%plotsynthetic = false;
+
 
 sdir = dir([resultsdir '*']);
 
