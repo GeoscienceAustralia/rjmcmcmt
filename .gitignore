@@ -1,5 +1,8 @@
 #File patterns that are ignored
 
+$ Executables
+*.exe
+
 $ Test files and scripts specific to raijin cluster
 *gadi*
 bin/gadi/intel/*
