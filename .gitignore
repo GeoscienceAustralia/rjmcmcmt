@@ -1,15 +1,19 @@
 #File patterns that are ignored
 
-$ Executables
+# Executables
 *.exe
 
-$ Test files and scripts specific to raijin cluster
+# CMake build directories
+build-ubuntu-win10
+install-ubuntu-win10
+
+# Test files and scripts specific to raijin cluster
 *gadi*
 bin/gadi/intel/*
 bin/gadi/gnu/*
 makefiles/run_make_vm.sh
 
-$ Output directory of examples
+# Output directory of examples
 examples/*/output*
 examples/*/*.out
 

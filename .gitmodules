@@ -1,3 +1,7 @@
 [submodule "submodules/cpp-utils"]
 	path = submodules/cpp-utils
 	url  = https://github.com/rcb547/cpp-utils.git
+[submodule "submodules/RJMCMC-1.0.11"]
+
+	path = submodules/RJMCMC-1.0.11
+	url = git@github.com:rcb547/RJMCMC-1.0.11.git

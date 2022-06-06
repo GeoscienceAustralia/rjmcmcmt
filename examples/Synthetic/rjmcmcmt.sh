@@ -1,5 +1,4 @@
 #!/bin/bash
 
-
-mpirun -n 6 rjmcmcmt.exe rjmcmcmt.con
+mpirun -np 6 ../../bin/rjmcmcmt.exe rjmcmcmt.con
 
