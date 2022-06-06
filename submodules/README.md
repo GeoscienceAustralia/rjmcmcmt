@@ -18,3 +18,11 @@ Git submodules are used in this project. They contain utility and third party so
 	- Only required if you want to compile the source code.
 	- Not required if you just want to run the precompiled Windows executables.
 
+# rj-McMC (RJMCMC-1.0.11)
+	- This is the underlying rj-McMC engine library
+	- Author: Rhys Hawkins, Research School of Earth Science, Australian National University.
+	- Language: C
+	- It was originally download from http://www.iearth.org.au/codes/rj-MCMC/ and one bug fix was applied
+	- The submodule uses the code in the git repository: git@github.com:rcb547/RJMCMC-1.0.11.git
+	- Only required if you want to compile the source code.
+	- Not required if you just want to run the precompiled Windows executables.

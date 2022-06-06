@@ -3,8 +3,8 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>$(RJMCMC_ROOT)\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(RJMCMC_ROOT)\lib\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\submodules\RJMCMC-1.0.11\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\submodules\RJMCMC-1.0.11\lib\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
     <OutDir>..\..\bin\$(Platform)\$(Configuration)\</OutDir>
     <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
