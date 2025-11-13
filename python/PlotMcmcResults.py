@@ -25,7 +25,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import matplotlib.ticker as ticker
-from matplotlib.ticker import MultipleLocator
+from matplotlib.ticker import MultipleLocator, LogLocator, NullFormatter
 import click
 
 class Results():
@@ -158,6 +158,7 @@ class Results():
 
             fn = os.path.join(self._stationDir, '%s_hist.txt' % (dd['name']))
             d = np.loadtxt(fn)
+            d /= np.sum(d, axis=1)[:, None] # normalize each depth-bin
             dd['hist'] = d
 
             self._props.append(dd)
@@ -203,23 +204,23 @@ class Results():
 
         # Set up fig and axes
         self._fig = plt.figure(figsize=(self._plotWidth, self._plotHeight))
-        self._hpad = 0.075
-        self._vpad = 0.075
+        self._hpad = 0.05
+        self._vpad = 0.05
 
-        self._ax1 = self._fig.add_axes([0 + self._hpad, 0.6666 + self._vpad,
-                                        0.5 - self._hpad, 0.3333 - self._vpad])  # top left
-        self._ax2 = self._fig.add_axes([0 + self._hpad, 0.3333 + self._vpad,
-                                        0.5 - self._hpad, 0.3333 - self._vpad])  # middle left
+        self._ax1 = self._fig.add_axes([0 + self._hpad, 0.62 + self._vpad,
+                                        0.5 - self._hpad, 0.32 - self._vpad*2])  # top left
+        self._ax2 = self._fig.add_axes([0 + self._hpad, 0.32 + self._vpad,
+                                        0.5 - self._hpad, 0.32 - self._vpad*2])  # middle left
         self._ax3 = self._fig.add_axes([0 + self._hpad, 0 + self._vpad,
-                                        0.25 - self._hpad, 0.3333 - self._vpad])  # lower-left first
+                                        0.25 - self._hpad, 0.275 - self._vpad*2])  # lower-left first
         self._ax4 = self._fig.add_axes([0.25 + self._hpad, 0 + self._vpad,
-                                        0.25 - self._hpad, 0.3333 - self._vpad])  # lower-left second
-        self._ax5 = self._fig.add_axes([0.5 + self._hpad, 0.05 + self._vpad,
-                                        0.3 - self._hpad, 0.95 - self._vpad])  # middle
-        self._ax5cb = self._fig.add_axes([0.5 + self._hpad, 0 + self._vpad,
-                                        0.3 - self._hpad, 0.05 - self._vpad])  # middle cb
-        self._ax6 = self._fig.add_axes([0.8 + self._hpad*0.5, 0 + self._vpad,
-                                        0.2 - self._hpad, 1 - self._vpad])  # right
+                                        0.25 - self._hpad, 0.275 - self._vpad*2])  # lower-left second
+        self._ax5 = self._fig.add_axes([0.525 + self._hpad, 0.05 + self._vpad,
+                                        0.275 - self._hpad, 0.95 - self._vpad])  # middle
+        self._ax5cb = self._fig.add_axes([0.525 + self._hpad, 0 + self._vpad*0,
+                                        0.275 - self._hpad, 0.05 - self._vpad/2])  # middle cb
+        self._ax6 = self._fig.add_axes([0.8 + self._hpad*0.5, 0.05 + self._vpad,
+                                        0.2 - self._hpad, 0.95 - self._vpad])  # right
 
         if (self._plotMisfits):
             xl = [1, 100 + np.max(self._MF['sample'][:, 0])]
@@ -269,7 +270,7 @@ class Results():
         self._ax5.plot(np.power(10., self._props[0]['mode'], ), self._depth, '-g', lw=1, label='Mode')
 
         self._ax5.set_xlabel('Resistivity [$\Omega . m$]')
-        self._ax5.set_ylabel('Depth [m]')
+        self._ax5.set_ylabel('Depth [m]', labelpad=1)
         self._ax5.legend(loc=3)
         self._ax5.grid(linestyle=':')
         self._ax5.xaxis.set_label_position('top')
@@ -277,9 +278,8 @@ class Results():
         self._ax5.xaxis.set_ticks_position('both')
 
         cbar = self._fig.colorbar(cbinfo, cax=self._ax5cb, orientation='horizontal')
-        cbar.set_label('Log conditional probability', labelpad=15)
-        cbar.ax.set_xticklabels([])
-        cbar.ax.tick_params(axis=u'both', which=u'both', length=0)
+        cbar.set_label('Probability', labelpad=5)
+        cbar.ax.tick_params(labelsize=5)
 
         # Plot partition depths
         xlim = [-10, np.max(self._partitionDepthHist)]
@@ -290,10 +290,11 @@ class Results():
         self._ax6.set_ylim(ylim)
         self._ax6.invert_yaxis()
         self._ax6.grid(linestyle=':')
-        self._ax6.set_xlabel('Change point')
-        self._ax6.xaxis.set_label_position('top')
+        self._ax6.set_xlabel('Change point (model#)', labelpad=10)
+        self._ax6.xaxis.set_label_position('bottom')
+        self._ax6.ticklabel_format(style='sci', axis='x', scilimits=(0,0), useMathText=True)
+
         self._ax6.set_yticklabels([])
-        self._ax6.set_xticklabels([])
 
         # Data 1 (Real impedance or App Res data)
         self._ax1.errorbar(self._D['period'], self._D['data1'], self._D['noise1'], color='red',
@@ -312,8 +313,8 @@ class Results():
         self._ax1.set_yscale('log')
         self._ax1.set_xlim(xlim)
         self._ax1.legend(loc='best')
-
         self._ax1.set_xlabel('Period [s]')
+        
         if (self._dtImpedance):
             self._ax1.set_ylabel('Real Impedance \n[mv/km/nT]')
         else:
