@@ -290,7 +290,7 @@ class Results():
         self._ax6.set_ylim(ylim)
         self._ax6.invert_yaxis()
         self._ax6.grid(linestyle=':')
-        self._ax6.set_xlabel('Change point (model#)', labelpad=10)
+        self._ax6.set_xlabel('Change point [model#]', labelpad=10)
         self._ax6.xaxis.set_label_position('bottom')
         self._ax6.ticklabel_format(style='sci', axis='x', scilimits=(0,0), useMathText=True)
 
