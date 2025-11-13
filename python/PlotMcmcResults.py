@@ -217,7 +217,7 @@ class Results():
                                         0.25 - self._hpad, 0.275 - self._vpad*2])  # lower-left second
         self._ax5 = self._fig.add_axes([0.525 + self._hpad, 0.05 + self._vpad,
                                         0.275 - self._hpad, 0.95 - self._vpad])  # middle
-        self._ax5cb = self._fig.add_axes([0.525 + self._hpad, 0 + self._vpad*0,
+        self._ax5cb = self._fig.add_axes([0.525 + self._hpad, 0 + self._vpad*0.2,
                                         0.275 - self._hpad, 0.05 - self._vpad/2])  # middle cb
         self._ax6 = self._fig.add_axes([0.8 + self._hpad*0.5, 0.05 + self._vpad,
                                         0.2 - self._hpad, 0.95 - self._vpad])  # right
@@ -290,8 +290,8 @@ class Results():
         self._ax6.set_ylim(ylim)
         self._ax6.invert_yaxis()
         self._ax6.grid(linestyle=':')
-        self._ax6.set_xlabel('Change point [model#]', labelpad=10)
-        self._ax6.xaxis.set_label_position('bottom')
+        self._ax6.set_xlabel('Change point', labelpad=10)
+        self._ax6.xaxis.set_label_position('top')
         self._ax6.ticklabel_format(style='sci', axis='x', scilimits=(0,0), useMathText=True)
 
         self._ax6.set_yticklabels([])
